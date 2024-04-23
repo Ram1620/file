@@ -1,0 +1,122 @@
+/*
+PROBLEM STATEMENT:
+
+To create ADT that implements the SET concept.
+	a. Add (newElement) -Place a value into the set 
+	b. Remove (element) Remove the value 
+	c. Contains (element) Return true if element is in collection 
+	d. Size () Return number of values in collection Iterator () Return an iterator used to loop over collection
+	e. Intersection  of two sets
+	f. Union of two sets
+	g. Difference between two sets
+	h.Subset
+*/
+
+
+
+class Set:
+    def __init__(self):
+        self.set_a = set()
+        self.set_b = set()
+
+    def insert_elements(self):
+        n = int(input("\nSET A:\nHow many Elements You want Add in Set A:\n"))
+        print("Enter Elements")
+        for _ in range(n):
+            num = int(input())
+            self.set_a.add(num)
+
+        m = int(input("\nSET B:\nHow many Elements You want Add in Set B:\n"))
+        print("Enter Elements")
+        for _ in range(m):
+            num = int(input())
+            self.set_b.add(num)
+
+    def add_element(self):
+        c = input("In Which Set do you want Add Element (A/B)\n").lower()
+        if c == 'a':
+            num = int(input("Enter Element\n"))
+            self.set_a.add(num)
+            print("\nElement Inserted\n")
+        elif c == 'b':
+            num = int(input("Enter Element\n"))
+            self.set_b.add(num)
+            print("\nElement Inserted\n")
+        else:
+            print("Invalid Set!!!")
+
+    def display_sets(self):
+        print("The Elements for Set A:\n", self.set_a)
+        print("The Elements for Set B:\n", self.set_b)
+
+    def search_element(self, key):
+        if key in self.set_a or key in self.set_b:
+            print("The Element is Present\n")
+        else:
+            print("The Element is not Present\n")
+
+    def delete_element(self, key):
+        if not self.set_a and not self.set_b:
+            print("The Set A & Set B is Empty\n")
+        else:
+            if key in self.set_a:
+                self.set_a.remove(key)
+            if key in self.set_b:
+                self.set_b.remove(key)
+            print("Element Deleted\n")
+
+    def union_sets(self):
+        union_set = self.set_a.union(self.set_b)
+        print("The Union Set of A & B is:", union_set)
+
+    def intersection_sets(self):
+        intersection_set = self.set_a.intersection(self.set_b)
+        if not intersection_set:
+            print("There is no Common element in Set A & Set B\n")
+        else:
+            print("The Intersection Set of A & B is:", intersection_set)
+
+    def difference_sets(self):
+        difference_set = self.set_a.difference(self.set_b)
+        if not difference_set:
+            print("The Set A & Set B are Equal\n")
+        else:
+            print("The Difference Set of A & B is:", difference_set)
+
+
+def main():
+    s = Set()
+    s.insert_elements()
+    while True:
+        print("\n\n-----------------------------\n")
+        print("Set Theory\n")
+        print("\n\n-----------------------------\n")
+        print("1.Add Element\n2.Delete Element\n3.Search Element\n4.Display\n5.Union\n6.Intersection\n7.Difference\n8.Exit\n")
+        ch = int(input("Enter Your Choice: "))
+
+        if ch == 1:
+            s.add_element()
+        elif ch == 2:
+            key = int(input("Enter which Element to Deleted: "))
+            s.delete_element(key)
+        elif ch == 3:
+            key = int(input("Enter the Element to be Searched: "))
+            s.search_element(key)
+        elif ch == 4:
+            s.display_sets()
+        elif ch == 5:
+            s.union_sets()
+        elif ch == 6:
+            s.intersection_sets()
+        elif ch == 7:
+            s.difference_sets()
+        elif ch == 8:
+            print("Exiting...")
+            break
+        else:
+            print("Invalid Choice")
+
+if __name__ == "__main__":
+    main()
+
+
