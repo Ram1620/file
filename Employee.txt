@@ -1,0 +1,141 @@
+/*Company maintains employee information as
+employee ID, name, designation and salary. Allow
+user to add, delete information of employee. Display
+information of particular employee. If employee does
+not exist an appropriate message is displayed. If it is,
+then the system displays the employee details. Use
+index sequential file to maintain the data.*/
+
+#include <iostream>
+#include <fstream>
+#include <string>
+
+using namespace std;
+
+struct Employee {
+    int empId;
+    string name;
+    string designation;
+    string salary;
+};
+
+void addEmployee() {
+    ofstream outFile("employee_data.txt", ios::app);
+    if (!outFile) {
+        cerr << "Error opening file for writing!" << endl;
+        return;
+    }
+
+    Employee newEmployee;
+    cout << "Enter employee id: ";
+    cin >> newEmployee.empId;
+    cout << "Enter Name: ";
+    cin.ignore();
+    getline(cin, newEmployee.name);
+    cout << "Enter Designation: ";
+    getline(cin, newEmployee.designation);
+    cout << "Enter Salary: ";
+    getline(cin, newEmployee.salary);
+
+    outFile << newEmployee.empId << " " << newEmployee.name << " " << newEmployee.designation << " " << newEmployee.salary << endl;
+
+    cout << "Employee information added successfully!" << endl;
+
+    outFile.close();
+}
+
+void deleteEmployee(int empIdToDelete) {
+    ifstream inFile("employee_data.txt");
+    if (!inFile) {
+        cerr << "Error opening file for reading!" << endl;
+        return;
+    }
+
+    ofstream tempFile("temp.txt");
+    if (!tempFile) {
+        cerr << "Error opening temporary file!" << endl;
+        inFile.close();
+        return;
+    }
+
+    bool found = false;
+    Employee employee;
+    while (inFile >> employee.empId >> employee.name >> employee.designation >> employee.salary) {
+        if (employee.empId != empIdToDelete) {
+            tempFile << employee.empId << " " << employee.name << " " << employee.designation << " " << employee.salary << endl;
+        } else {
+            found = true;
+        }
+    }
+
+    inFile.close();
+    tempFile.close();
+
+    remove("employee_data.txt");
+    rename("temp.txt", "employee_data.txt");
+
+    if (found) {
+        cout << "Employee information deleted successfully!" << endl;
+    } else {
+        cout << "Employee with employee id " << empIdToDelete << " not found!" << endl;
+    }
+}
+
+void displayEmployee(int empIdToDisplay) {
+    ifstream inFile("employee_data.txt");
+    if (!inFile) {
+        cerr << "Error opening file for reading!" << endl;
+        return;
+    }
+
+    Employee employee;
+    bool found = false;
+    while (inFile >> employee.empId >> employee.name >> employee.designation >> employee.salary) {
+        if (employee.empId == empIdToDisplay) {
+            found = true;
+            cout << "Employee Id: " << employee.empId << endl;
+            cout << "Name: " << employee.name << endl;
+            cout << "Designation: " << employee.designation << endl;
+            cout << "Salary: " << employee.salary << endl;
+            break;
+        }
+    }
+
+    if (!found) {
+        cout << "Employee with employee id " << empIdToDisplay << " not found!" << endl;
+    }
+
+    inFile.close();
+}
+
+int main() {
+    int choice;
+    int emp_Id;
+
+    do {
+        cout << "\n1. Add employee\n2. Delete employee\n3. Display employee\n4. Exit\nEnter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                addEmployee();
+                break;
+            case 2:
+                cout << "Enter employee id of employee to delete: ";
+                cin >> emp_Id;
+                deleteEmployee(emp_Id);
+                break;
+            case 3:
+                cout << "Enter employee id of employee to display: ";
+                cin >> emp_Id;
+                displayEmployee(emp_Id);
+                break;
+            case 4:
+                cout << "Exiting program." << endl;
+                break;
+            default:
+                cout << "Invalid choice! Please try again." << endl;
+        }
+    } while (choice != 4);
+
+}
